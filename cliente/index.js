@@ -1,4 +1,5 @@
 const baseURL = 'http://localhost:4003';
+const table = document.querySelector('#table');
 
 fetch(`${baseURL}/api/bands`)
   .then(function (res) {
@@ -14,7 +15,7 @@ fetch(`${baseURL}/api/bands`)
             <button class="view-albums">Ver discos</button>
         </div>`;
 
-       document.querySelector('#table').innerHTML += banda; 
+       table.innerHTML += banda; 
     })
     const viewAlbumsBttn = document.querySelectorAll('.view-albums');
     for (let i = 0; i < viewAlbumsBttn.length; i++) {
@@ -34,7 +35,7 @@ fetch(`${baseURL}/api/bands`)
                      <div class="album-year">${a.year}</div>
                  </div>
                  `;
-             document.getElementById(`${bandId}`).innerHTML+=album
+             document.getElementById('albums').innerHTML+=album
 
              })
          })
@@ -49,3 +50,34 @@ function deleteBand (band) {
         document.getElementById(band).remove();
     })
 };
+
+document.getElementById('new-band').onsubmit = function (e) {
+  e.preventDefault();
+  const newBandName = document.querySelector('form input').value;
+  const formSelect = document.querySelector('form select');
+  const newBandGenre = formSelect.options[formSelect.selectedIndex].value;
+  const newBand = {
+    name: newBandName,
+    genre: newBandGenre
+  }
+  console.log(newBand);
+  fetch(`${baseURL}/api/bands`, {
+    method: 'post',
+    body: JSON.stringify(newBand),
+    //pasa un objeto a un string y puedo volver atrás
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then( res => res.json() )
+  .then(n => {
+    const banda = `
+        <div class="band" id="${n.id}">
+            <div class="band-name">${n.name}</div>
+            <div class="band-genre">${n.genre}</div>
+            <button class="delete" onclick="deleteBand(${n.id})">Eliminar</button>
+            <button class="view-albums">Ver discos</button>
+        </div>`;
+    table.innerHTML += banda;
+  })
+}
