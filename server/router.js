@@ -31,8 +31,11 @@ router.get('/api/bands/:bandId/albums', function (req, res) {
 
 router.delete('/api/bands/:bandId/delete', function (req, res) {
   const id = parseInt(req.params.bandId);
-  const bands = bandas.filter(bands => bands.id != id);
-  res.json(bands)
+  function checkId(band) {
+    return band.id == id;
+  }
+  bandas.splice(bandas.findIndex(checkId), 1);
+  res.json(bandas)
 });
 
 router.post('/api/bands', (req, res) => {

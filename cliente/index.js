@@ -60,7 +60,6 @@ document.getElementById('new-band').onsubmit = function (e) {
     name: newBandName,
     genre: newBandGenre
   }
-  console.log(newBand);
   fetch(`${baseURL}/api/bands`, {
     method: 'post',
     body: JSON.stringify(newBand),
